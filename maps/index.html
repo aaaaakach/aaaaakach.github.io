@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="akach travel maps.">
+  <title>akach — Maps</title>
+  <link rel="stylesheet" href="../style.css">
+  <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.1" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="../supabase-config.js" defer></script>
+  <script src="../admin.js" defer></script>
+  <script src="data/china-city-data.js" defer></script>
+  <script src="maps.js?v=8-photo-size-fix" defer></script>
+</head>
+<body class="maps-page">
+  <header class="site-header">
+    <a class="wordmark" href="../personal.html" aria-label="akach personal page">akach</a>
+    <nav aria-label="Primary navigation">
+      <a href="../index.html#home">HOME</a>
+      <a href="../phd-application.html">PHD APPLICATION</a>
+      <a class="is-current" href="./" aria-current="page">MAPS</a>
+      <a href="../index.html#detour-3">DETOUR 3</a>
+    </nav>
+  </header>
+
+  <main class="maps-shell">
+    <h1 class="maps-title">Maps</h1>
+    <div class="globe-stage" id="globe" tabindex="0" aria-label="Interactive world globe. Drag to rotate; use arrow keys when focused.">
+      <p class="globe-status" id="globe-status" role="status">Loading world…</p>
+    </div>
+    <section class="china-view" id="china-view" aria-label="China province map" hidden>
+      <button class="world-return" id="world-return" type="button">← World</button>
+      <p class="china-status" id="china-status" role="status">Loading provinces…</p>
+      <svg class="china-map" id="china-map" viewBox="0 0 700 620" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Map of China with province boundaries">
+        <g id="china-provinces"></g>
+        <g id="china-pins"></g>
+      </svg>
+    </section>
+    <button class="plane-launch" id="plane-launch" type="button" aria-expanded="false" aria-controls="to-panel" aria-label="Add a visited destination">
+      <img src="airplane.svg" alt="">
+    </button>
+    <aside class="to-panel" id="to-panel" hidden>
+      <form id="destination-form">
+        <label for="destination">TO:</label>
+        <p>Where are we going?</p>
+        <input id="destination" name="destination" list="destination-list" autocomplete="off" required>
+        <datalist id="destination-list"></datalist>
+        <button type="submit">Send ↗</button>
+        <output id="destination-status" aria-live="polite"></output>
+      </form>
+    </aside>
+    <span class="flight-plane" id="flight-plane" aria-hidden="true" hidden><img src="airplane.svg" alt=""></span>
+    <span class="impact-ripple" id="impact-ripple" aria-hidden="true"></span>
+    <svg class="leader-line" id="leader-line" aria-hidden="true">
+      <path></path>
+    </svg>
+    <article class="memory-card" id="memory-card" tabindex="-1" hidden>
+      <button class="memory-edit" id="memory-edit" type="button">Edit</button>
+      <p class="memory-type" id="memory-type">Visited country</p>
+      <h2 id="memory-title"></h2>
+      <p class="memory-note" id="memory-note" hidden></p>
+      <div class="memory-photos" id="memory-photos"></div>
+      <form class="memory-form" id="memory-form" hidden>
+        <label>Name<input id="memory-name" required maxlength="80"></label>
+        <label>Note<textarea id="memory-note-input" maxlength="280"></textarea></label>
+        <div class="memory-existing-photos" id="memory-existing-photos" aria-label="Saved photos"></div>
+        <label>Photos<input id="memory-photo-input" type="file" accept="image/jpeg,image/png,image/webp,image/avif" multiple></label>
+        <button type="submit">Save</button><button type="button" id="memory-cancel">Cancel</button>
+        <output id="memory-status" aria-live="polite"></output>
+      </form>
+    </article>
+    <aside class="pin-panel" id="pin-panel" hidden>
+      <form id="pin-form">
+        <strong>Pin</strong>
+        <p>Mark a coordinate.</p>
+        <label for="pin-latitude">Latitude</label>
+        <input id="pin-latitude" name="latitude" type="number" min="-90" max="90" step="any" required>
+        <label for="pin-longitude">Longitude</label>
+        <input id="pin-longitude" name="longitude" type="number" min="-180" max="180" step="any" required>
+        <label for="pin-note">Note <span>(optional)</span></label>
+        <input id="pin-note" name="note" maxlength="120">
+        <button type="submit">Place pin</button>
+        <button class="pin-delete" id="pin-delete" type="button" hidden>Delete pin</button>
+        <output id="pin-status" aria-live="polite"></output>
+      </form>
+    </aside>
+    <div class="places-area">
+      <button class="pin-launch" id="pin-launch" type="button" aria-expanded="false" aria-controls="pin-panel" aria-label="Add a map pin">📍</button>
+      <button class="places" id="places-open" type="button" aria-haspopup="dialog" aria-controls="places-panel">
+        <strong>Places</strong>
+        <span><span id="country-count">0</span> countries · <span id="city-count">0</span> cities</span>
+      </button>
+    </div>
+    <section class="places-panel" id="places-panel" role="dialog" aria-modal="true" aria-labelledby="places-heading" hidden>
+      <button class="places-close" id="places-close" type="button" aria-label="Close Places">×</button>
+      <h2 id="places-heading"><span id="places-country-count">0</span> countries · <span id="places-city-count">0</span> cities</h2>
+      <div class="places-columns">
+        <section><h3>Countries</h3><ul id="country-list"></ul><form id="country-add-form"><label>Add country<input id="country-add" list="country-add-list" autocomplete="off" required></label><datalist id="country-add-list"></datalist><button type="submit">+</button></form></section>
+        <section><h3>Cities</h3><ul id="city-list"></ul><form id="city-add-form"><label>Add city<input id="city-add" list="city-add-list" autocomplete="off" required></label><datalist id="city-add-list"></datalist><button type="submit">+</button></form></section>
+      </div>
+      <output id="places-status" aria-live="polite"></output>
+    </section>
+    <p class="pin-label" id="pin-label" role="tooltip" hidden></p>
+    <p class="data-status" id="data-status" role="status" aria-live="polite"></p>
+  </main>
+</body>
+</html>

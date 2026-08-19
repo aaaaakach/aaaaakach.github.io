@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Relaxed black-pen paper airplane sketch</title>
+  <desc id="desc">A paper airplane seen from thirty to forty-five degrees above and behind, with two open wings and a recessed central fold, drawn in sparse exploratory black lines.</desc>
+
+  <g transform="rotate(-45 600 450) translate(1200 0) scale(-1 1)" fill="none" stroke="#242424" stroke-linecap="round" stroke-linejoin="round">
+    <!-- fast outer sweeps: deliberately independent, with open terminals -->
+    <path d="M 157 626
+             C 261 570, 401 495, 569 401
+             C 683 336, 790 276, 906 215
+             C 927 203, 944 196, 957 192"
+          stroke-width="5.4"/>
+    <path d="M 963 193
+             C 901 260, 836 329, 758 408
+             C 678 488, 591 572, 482 669
+             C 455 691, 431 710, 409 724"
+          stroke-width="4.7"/>
+
+    <!-- left wing: one broad drift before recovering toward the rear -->
+    <path d="M 161 628
+             C 266 646, 370 673, 474 710
+             C 493 716, 507 720, 520 719"
+          stroke-width="4.9"/>
+    <path d="M 174 620
+             C 282 563, 405 493, 571 402"
+          stroke-width="2.4" opacity="0.42"/>
+
+    <!-- right wing: slightly shorter and not perfectly registered -->
+    <path d="M 957 194
+             C 939 309, 917 424, 891 544
+             C 870 634, 849 695, 828 735"
+          stroke-width="5.1"/>
+    <path d="M 825 736
+             C 754 705, 682 679, 612 659
+             C 573 648, 540 643, 510 644"
+          stroke-width="4.4"/>
+
+    <!-- central recessed fold: the recognition knot -->
+    <path d="M 958 194
+             C 869 278, 773 373, 680 469
+             C 614 537, 558 594, 511 643
+             C 500 654, 494 665, 491 675"
+          stroke-width="6.0"/>
+    <path d="M 951 201
+             C 859 294, 771 385, 682 477
+             C 620 541, 566 597, 519 648"
+          stroke-width="2.7" opacity="0.66"/>
+    <path d="M 491 676
+             C 500 688, 508 701, 517 718
+             C 520 724, 523 727, 527 728"
+          stroke-width="5.6"/>
+
+    <!-- sparse wing folds; inferred rather than fully described -->
+    <path d="M 568 404
+             C 481 482, 399 555, 329 615
+             C 318 624, 309 632, 302 638"
+          stroke-width="3.2"/>
+    <path d="M 683 473
+             C 725 530, 764 585, 802 637
+             C 811 649, 817 659, 822 667"
+          stroke-width="3.5"/>
+
+    <!-- displaced restart and abandoned search fragments -->
+    <path d="M 469 683 C 488 690, 503 700, 515 713"
+          stroke-width="2.2" opacity="0.72"/>
+    <path d="M 205 606 C 247 585, 278 566, 309 547"
+          stroke-width="2.0" opacity="0.38"/>
+    <path d="M 846 691 C 853 674, 859 655, 864 635"
+          stroke-width="2.3" opacity="0.42"/>
+
+    <!-- compact dark correction where the valley meets the rear folds -->
+    <path d="M 503 647 C 497 657, 493 668, 493 677"
+          stroke-width="3.1" opacity="0.9"/>
+  </g>
+</svg>
