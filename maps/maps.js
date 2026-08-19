@@ -187,7 +187,7 @@ if (!window.Globe) {
       supplementalProvinces.clear();
       const supplementalData = await Promise.all([...supplementalProvinces].map(async ([code, name]) => {
         try {
-          const response = await fetch(`https://geo.datav.aliyun.com/areas_v3/bound/${code}_full.json`);
+          const response = await fetch(`data/${code}_full.json`);
           if (!response.ok) return [];
           const data = await response.json();
           return data.features.map(feature => ({
@@ -209,11 +209,8 @@ if (!window.Globe) {
 
   const resolveCityCoordinates = async city => {
     if (Number.isFinite(city.lat) && Number.isFinite(city.lng)) return city;
-    const response = await fetch(`https://geo.datav.aliyun.com/areas_v3/bound/${city.code}.json`);
-    if (!response.ok) throw new Error("City coordinate request failed");
-    const data = await response.json();
-    const feature = data.features?.[0] || data;
-    const center = feature.properties?.center || feature.properties?.centroid;
+    const feature = provinceFeatures.find(item => provinceCode(item) === city.provinceCode);
+    const center = feature?.properties?.center || feature?.properties?.centroid;
     if (!center) throw new Error("City coordinate is missing");
     city.lng = Number(center[0]);
     city.lat = Number(center[1]);
@@ -472,7 +469,7 @@ if (!window.Globe) {
     if (chinaLoaded) return;
     // Alibaba Cloud DataV GeoAtlas: China province boundaries, including its South China Sea representation.
     // Source terms: DataV documents the dataset as AMAP-derived and intended for learning/communication use.
-    fetch("https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json")
+    fetch("data/china-provinces-full.geojson")
       .then(response => {
         if (!response.ok) throw new Error("Province data request failed");
         return response.json();
