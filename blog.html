@@ -23,13 +23,14 @@
     </nav>
   </header>
 
-  <main class="blog-layout">
+  <main class="blog-layout" id="blog-layout">
     <aside class="blog-sidebar" aria-label="Blog timeline navigation">
       <details class="blog-archive" id="blog-archive" open>
         <summary>Browse dates</summary>
         <nav class="blog-archive-nav" id="blog-archive-nav" aria-label="Years, months, and dates"></nav>
       </details>
     </aside>
+    <div class="blog-resizer" id="blog-resizer" role="separator" tabindex="0" aria-label="Resize the date navigation" aria-orientation="vertical" aria-valuemin="190" aria-valuemax="480" aria-valuenow="250"></div>
 
     <section class="blog-content">
       <header class="blog-heading">
@@ -37,6 +38,7 @@
           <p class="status"><span></span> PRIVATE BLOG</p>
           <h1 class="blog-title">Blog</h1>
         </div>
+        <button class="blog-button blog-export-toggle" id="blog-export-toggle" type="button" aria-expanded="false" aria-controls="blog-export-panel">Export Markdown</button>
       </header>
 
       <section class="blog-access" id="blog-access" aria-live="polite">
@@ -47,12 +49,21 @@
       </section>
 
       <div class="blog-workspace" id="blog-workspace" hidden>
+        <section class="blog-export-panel" id="blog-export-panel" hidden aria-labelledby="blog-export-title">
+          <h2 id="blog-export-title">Choose dates to export</h2>
+          <div class="blog-export-tree" id="blog-export-tree"></div>
+          <div class="blog-export-actions">
+            <p id="blog-export-count">Select one or more dates.</p>
+            <button class="blog-button" id="blog-export-download" type="button" disabled>Download Markdown</button>
+          </div>
+        </section>
+
         <section class="blog-editor" id="blog-editor" hidden aria-labelledby="blog-editor-title">
           <h2 id="blog-editor-title">Write a post</h2>
           <form id="blog-post-form">
             <label>Title<input id="blog-post-title" name="title" maxlength="160" required></label>
-            <label>Date<input id="blog-post-date" name="entry_date" type="date" required></label>
             <label>Text<textarea id="blog-post-body" name="body" rows="9" required></textarea></label>
+            <p class="blog-entry-preview">Local date and time at publication: <time id="blog-entry-preview"></time></p>
             <div class="blog-form-actions">
               <button class="blog-button" id="blog-post-submit" type="submit">Publish</button>
               <button class="blog-button blog-button-quiet" id="blog-post-cancel" type="reset">Clear</button>

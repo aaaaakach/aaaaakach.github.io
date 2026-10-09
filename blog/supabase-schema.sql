@@ -6,8 +6,10 @@ create table if not exists public.blog_posts (
   title text not null check (length(btrim(title)) > 0),
   body text not null check (length(btrim(body)) > 0),
   entry_date date not null,
+  entry_time time not null,
+  timezone_name text not null,
+  timezone_offset_minutes smallint not null check (timezone_offset_minutes between -840 and 840),
   created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now(),
   created_by uuid not null default auth.uid() references auth.users(id) on delete cascade
 );
 
@@ -29,17 +31,13 @@ alter table public.blog_posts enable row level security;
 alter table public.blog_comments enable row level security;
 
 revoke all on public.blog_posts, public.blog_comments from anon, authenticated;
-grant select, insert, update, delete on public.blog_posts, public.blog_comments to authenticated;
+grant select, insert, delete on public.blog_posts, public.blog_comments to authenticated;
 
 create policy "authenticated blog post reads" on public.blog_posts
   for select to authenticated using (auth.uid() is not null);
 create policy "map admin blog post inserts" on public.blog_posts
   for insert to authenticated
   with check (public.is_map_admin() and created_by = auth.uid());
-create policy "map admin blog post updates" on public.blog_posts
-  for update to authenticated
-  using (public.is_map_admin())
-  with check (public.is_map_admin());
 create policy "map admin blog post deletes" on public.blog_posts
   for delete to authenticated using (public.is_map_admin());
 
