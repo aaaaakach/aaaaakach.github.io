@@ -20,6 +20,7 @@ create table if not exists public.blog_comments (
   id uuid primary key default gen_random_uuid(),
   post_id uuid not null references public.blog_posts(id) on delete cascade,
   body text not null check (length(btrim(body)) > 0),
+  author_name text not null default 'Member',
   created_at timestamptz not null default now(),
   created_by uuid not null default auth.uid() references auth.users(id) on delete cascade
 );

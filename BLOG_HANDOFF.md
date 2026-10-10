@@ -1,6 +1,6 @@
 # Blog handoff
 
-Updated: 2026-10-09
+Updated: 2026-10-10
 
 Use this note to continue the Blog work in a new conversation without needing this chat history.
 
@@ -22,7 +22,7 @@ Use this note to continue the Blog work in a new conversation without needing th
 - The owner requested a local refinement pass; these edits are not yet committed or pushed.
 - No automated tests or browser preview were run by the coding agent.
 - Supabase migration has already been applied. **Do not run `blog/supabase-schema.sql` again**: it creates policies without `IF NOT EXISTS` and is intended as a one-time migration.
-- A second additive SQL migration exists at `blog/migrations/002-local-entry-time-and-immutable-posts.sql`. It has **not** been run. Run it once in Supabase before deploying the latest local code. It adds local publication time/timezone fields and disables post updates while preserving existing post dates.
+- Additive SQL migrations `002`–`004` are present under `blog/migrations/`. Their application status has not been verified in Supabase for this handoff. Check the live schema/migration history before applying any of them; apply only missing migrations and never rerun an applied migration. In particular, `blog/supabase-schema.sql` already contains the local publication time/timezone columns described by migration `002`.
 
 ## Confirmed product decisions
 
@@ -46,10 +46,13 @@ Use this note to continue the Blog work in a new conversation without needing th
 - `blog.css` — Blog-specific layout, resizable date navigator, and responsive styles; imports shared design through `style.css`.
 - `blog.js` — Session gate, Supabase reads/writes, local publication timestamps, date grouping/navigation, collapsible comments, Markdown export, and admin actions.
 - `blog/supabase-schema.sql` — One-time schema, grants, and RLS migration. Requires the existing `public.is_map_admin()` function.
-- `index.html`, `personal.html`, `phd-application.html`, `maps/index.html` — shared navigation links to Blog; the home page's former Detour 3 now links to Blog.
+- `blog/migrations/002-local-entry-time-and-immutable-posts.sql` — local post time fields and immutable published posts.
+- `blog/migrations/003-comment-author-name.sql` — adds and backfills comment author names.
+- `blog/migrations/004-admin-comment-name.sql` — standardizes administrator comment names to `yu`.
+- `index.html`, `personal.html`, `phd-application.html`, `maps/index.html` — shared navigation links to Blog; Home's destination list links to Blog.
 - `admin.js` — existing shared Google OAuth / Supabase session and Maps admin check. Blog reuses `window.AKACH_ADMIN.client` and its `adminchange` event.
 - `supabase-config.js` — existing public Supabase browser configuration. Never add service-role keys or credentials here.
-- `AGENTS.md` — project instructions and owner approval / publishing rules. Read it before editing. Its design-contract text may still describe the old Detour 3 placeholder and has not been updated for Blog.
+- `AGENTS.md` — current project instructions and owner approval / publishing rules. Read it before editing.
 
 ## Database and access notes
 
@@ -62,10 +65,9 @@ The migration only applies to Blog tables. Maps tables and the Maps photo bucket
 At the last status check, these files were already untracked in the local checkout and were deliberately not included in the Blog commit:
 
 - `maps/HANDOFF.md`
-- `maps/plane.svg`
 - `maps/supabase-schema.sql`
 
-Do not stage, overwrite, or delete them when making Blog changes.
+Preserve unrelated Maps work when making Blog changes. `maps/plane.svg` was removed after the current Maps page was confirmed to use `maps/airplane.svg`.
 
 ## Suggested continuation
 

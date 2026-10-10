@@ -16,7 +16,7 @@
   <header class="site-header">
     <a class="wordmark" href="personal.html" aria-label="akach personal page">akach</a>
     <nav aria-label="Primary navigation">
-      <a href="index.html#home">HOME</a>
+      <a href="index.html">HOME</a>
       <a href="phd-application.html">PHD APPLICATION</a>
       <a href="maps/">MAPS</a>
       <a class="is-current" href="blog.html" aria-current="page">BLOG</a>
@@ -35,10 +35,17 @@
     <section class="blog-content">
       <header class="blog-heading">
         <div>
-          <p class="status"><span></span> PRIVATE BLOG</p>
+          <p class="status"><span></span> 滚滚长江东逝水</p>
           <h1 class="blog-title">Blog</h1>
         </div>
-        <button class="blog-button blog-export-toggle" id="blog-export-toggle" type="button" aria-expanded="false" aria-controls="blog-export-panel">Export Markdown</button>
+        <div class="blog-heading-actions">
+          <button class="blog-button blog-button-quiet blog-search-toggle" id="blog-search-toggle" type="button" aria-label="Search Blog" title="Search Blog" aria-expanded="false" aria-controls="blog-search-panel" hidden>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.3"></circle><path class="search-handle" d="m16 16 4.2 4.2"></path></svg>
+          </button>
+          <button class="blog-button blog-export-toggle" id="blog-export-toggle" type="button" aria-label="Export Markdown" title="Export Markdown" aria-expanded="false" aria-controls="blog-export-panel" hidden>
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><g class="download-arrow"><path d="M12 3v12m0 0 4-4m-4 4-4-4"></path></g><path d="M5 17v3h14v-3"></path></svg>
+          </button>
+        </div>
       </header>
 
       <section class="blog-access" id="blog-access" aria-live="polite">
@@ -49,6 +56,13 @@
       </section>
 
       <div class="blog-workspace" id="blog-workspace" hidden>
+        <section class="blog-search-panel" id="blog-search-panel" hidden aria-label="Search Blog posts">
+          <label for="blog-search-input">Search posts</label>
+          <input id="blog-search-input" type="search" autocomplete="off" placeholder="Search a word or phrase…">
+          <p class="blog-search-status" id="blog-search-status" role="status" aria-live="polite">Enter a word or phrase.</p>
+          <ul class="blog-search-results" id="blog-search-results"></ul>
+        </section>
+
         <section class="blog-export-panel" id="blog-export-panel" hidden aria-labelledby="blog-export-title">
           <h2 id="blog-export-title">Choose dates to export</h2>
           <div class="blog-export-tree" id="blog-export-tree"></div>
@@ -63,7 +77,6 @@
           <form id="blog-post-form">
             <label>Title<input id="blog-post-title" name="title" maxlength="160" required></label>
             <label>Text<textarea id="blog-post-body" name="body" rows="9" required></textarea></label>
-            <p class="blog-entry-preview">Local date and time at publication: <time id="blog-entry-preview"></time></p>
             <div class="blog-form-actions">
               <button class="blog-button" id="blog-post-submit" type="submit">Publish</button>
               <button class="blog-button blog-button-quiet" id="blog-post-cancel" type="reset">Clear</button>

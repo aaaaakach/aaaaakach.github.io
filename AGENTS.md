@@ -2,15 +2,20 @@
 
 ## Project
 
-This is the personal GitHub Pages homepage for `akach` at `aaaaakach.github.io`.
+This is akach's multi-page personal website, hosted on GitHub Pages at `aaaaakach.github.io`.
 
-The homepage is intentionally a tiny static site:
+The site uses plain HTML, CSS, and JavaScript without a frontend framework or build step:
 
-- `index.html` — content and structure
-- `style.css` — all presentation
-- No JavaScript, package manager, framework, or build step for the homepage by default
+- `index.html` — Home and links to the site's three main destinations
+- `personal.html` — personal identity and shared sign-in entry
+- `phd-application.html` — PhD application workspace
+- `maps/index.html` — interactive travel map
+- `blog.html` — private Blog
+- `style.css` — shared site presentation
+- `blog.css` — Blog-specific presentation
+- `admin.js` — shared Supabase authentication and administrator state
 
-The Maps subpage is an approved scoped exception. Read `MAPS_PRD.md` before any Maps work. Maps may use JavaScript/WebGL, map data, Supabase, authentication, storage, and narrowly chosen dependencies when they are necessary for the approved experience. These exceptions do not change the default rules for Home or other detours.
+Read `MAPS_PRD.md` before Maps work and `BLOG_HANDOFF.md` before Blog work. Maps and Blog use JavaScript and Supabase for their approved features. Maps also uses WebGL and geographic data. These scoped features do not authorize unrelated frameworks, packages, or build tooling.
 
 ## Owner approval rule
 
@@ -21,10 +26,10 @@ Read-only inspection, explaining options, and drafting a proposal are allowed wi
 ## Current design contract
 
 - The wordmark is always lowercase: `akach`.
-- Header layout: wordmark at upper-left; centered `Home / DETOUR 1 / DETOUR 2 / DETOUR 3` navigation on desktop.
+- Header layout: wordmark at upper-left; centered `HOME / PHD APPLICATION / MAPS / BLOG` navigation on desktop.
 - The main message is bilingual: `Construction zone / 建设中`.
 - Keep the visual language sparse: near-white canvas, black/grey text, very subtle blue-grey grid, thin dividers, large type, and ample whitespace.
-- Detours remain placeholders unless a product document assigns them. `PHD APPLICATION` and `Maps` are approved destinations; Maps uses `/maps/` and is specified in `MAPS_PRD.md`.
+- Home links to the actual `PHD APPLICATION`, `MAPS`, and `BLOG` destinations. These are current site sections, not placeholders.
 - Do not copy text, visual assets, icons, or distinctive treatments from the reference site. Only its broad page rhythm was used as inspiration.
 - Do not add animation unless the owner explicitly approves it. The spatial and feedback animations specified in `MAPS_PRD.md` are already approved for Maps only.
 
@@ -46,7 +51,7 @@ Read-only inspection, explaining options, and drafting a proposal are allowed wi
 - Never put administrator email allowlists, service-role keys, secrets, or write authorization solely in client-side code. Enforce writes with Supabase Auth, Row Level Security, and Storage policies.
 - Use reliable geographic data and document its source and license. The China view must follow the geographic coverage specified in `MAPS_PRD.md`.
 - Implement mouse, touch, and keyboard-equivalent access where applicable. Honor `prefers-reduced-motion` and keep core actions usable without hover or full motion.
-- Do not refactor unrelated Home or PHD APPLICATION code while implementing Maps.
+- Do not refactor unrelated Home, PHD APPLICATION, or Blog code while implementing Maps.
 
 ## Verification
 

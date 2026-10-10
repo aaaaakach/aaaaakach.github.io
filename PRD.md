@@ -1,4 +1,4 @@
-# akach Personal Homepage — PRD
+# akach Personal Website — PRD
 
 ## 1. Overview
 
@@ -6,44 +6,45 @@
 | --- | --- |
 | Site name | `akach` (always lowercase) |
 | Public address | `aaaaakach.github.io` |
-| Product type | Personal homepage / landing page |
-| Current status | First static framework; content is intentionally provisional |
+| Planned custom domain | `vegfish.top` (configuration and publishing are still pending) |
+| Product type | Static multi-page personal website |
+| Current status | Home, PHD APPLICATION, MAPS, and private BLOG are implemented |
 | Primary language | English + Simplified Chinese |
 | Primary message | `Construction zone / 建设中` |
 | Reference | [Yuri.WG Portfolio](https://yuri-wg-portfolio.pages.dev/) — use its information rhythm only, not its content or assets |
 
 ## 2. Product goal
 
-Create a calm, memorable personal homepage that introduces `akach` and provides a durable shell for future work. The first release is deliberately sparse: it establishes navigation, hierarchy, and visual identity without pretending that the destination content already exists.
+Create a calm, memorable personal website that introduces `akach` and connects visitors to the owner's current workspaces: PHD APPLICATION, MAPS, and BLOG. Home provides the shared identity, navigation, and visual language for these destinations.
 
-### Success criteria for v1
+### Current success criteria
 
 - The name `akach` is immediately visible in the upper-left corner.
 - A visitor can understand that the site is under construction in both languages.
-- The page exposes four clear navigation destinations: Home and three future detours.
-- The design feels intentional on desktop and mobile without animation, a content management system, or a JavaScript build step.
-- The site can be published by uploading the files in this directory to the root of the GitHub Pages repository.
+- Every page exposes the same four global navigation destinations: Home, PHD APPLICATION, MAPS, and BLOG.
+- Home links to the three implemented destinations below its hero.
+- The design feels intentional on desktop and mobile without a frontend framework or build step.
+- GitHub Pages serves the static site from the repository root.
 
 ## 3. Scope
 
-### Included in v1
+### Current scope
 
-- One responsive static homepage.
-- Header navigation.
-- Hero / construction-zone message.
-- Three placeholder content entrances.
-- Simple footer.
-- Keyboard-visible focus states and semantic landmarks.
+- Shared responsive navigation and visual styles.
+- Home hero and three links to current site destinations.
+- PHD APPLICATION workspace.
+- Interactive MAPS page with Supabase-backed data and administrator editing.
+- Private BLOG with Supabase authentication, posts, comments, search, and Markdown export.
+- Keyboard-visible focus states and semantic landmarks across pages.
 
-### Explicitly excluded from v1
+### Not part of the current site scope
 
-- Motion, scroll effects, cursor effects, or other animation.
+- A new site-wide motion system; page-specific interactions remain governed by their own requirements.
 - Avatar, portrait, social links, email, contact form, or project links.
-- Individual pages for the three detours.
-- CMS, analytics, backend, packages, frameworks, and build tooling.
+- A frontend framework or build pipeline.
 - A dark-mode switch or language switcher.
 
-Add any excluded item only after the site owner confirms it.
+Changes to product scope, external services, or dependencies require owner approval.
 
 ## 4. Target audience and intent
 
@@ -53,19 +54,18 @@ The initial audience is people who arrive through the personal URL. They should 
 2. The site is actively being made.
 3. More distinct work or directions will appear here later.
 
-There is no conversion goal yet. The visual experience and a clear future-facing structure are the goal.
+There is no conversion goal. The visual experience and clear access to the current site sections are the goal.
 
 ## 5. Information architecture
 
 ```text
 Home
-├── Home (#home)
-├── DETOUR 1 (#detour-1)   — placeholder
-├── DETOUR 2 (#detour-2)   — placeholder
-└── DETOUR 3 (#detour-3)   — placeholder
+├── PHD APPLICATION → phd-application.html
+├── MAPS             → maps/
+└── BLOG             → blog.html
 ```
 
-The hash links are deliberate placeholders. When real destinations exist, replace each target with its final URL or page path. Do not create empty pages early.
+The global navigation links to Home and these same three current destinations. The Home hero's scroll cue leads to the destination list below it.
 
 ## 6. Content inventory
 
@@ -77,9 +77,9 @@ The hash links are deliberate placeholders. When real destinations exist, replac
 | Hero message | `Construction zone` | `建设中` | Provisional |
 | Status label | `WORK IN PROGRESS` | — | Provisional |
 | Scroll cue | `explore below` | — | Provisional |
-| Navigation | `Home`, `DETOUR 1`, `DETOUR 2`, `DETOUR 3` | — | Provisional except Home |
-| Each detour subtitle | `Coming soon` | `即将开放` | Placeholder |
-| Footer | `© 2026 akach` | `More coming soon. / 更多内容即将到来。` | Provisional |
+| Navigation | `HOME`, `PHD APPLICATION`, `MAPS`, `BLOG` | — | Current |
+| Home destination links | PHD APPLICATION, MAPS, BLOG | — | Current |
+| Footer | `© 2026 akach` | `More coming soon. / 更多内容即将到来。` | Current; retain |
 
 ## 7. Page specification
 
@@ -101,13 +101,13 @@ The hash links are deliberate placeholders. When real destinations exist, replac
 - Ends with a text-only downward exploration cue.
 - Contains no animation and no decorative image assets.
 
-### 7.3 Detour list
+### 7.3 Home destinations
 
 - Appears directly beneath the hero.
 - Has three full-width rows numbered `01`–`03`.
-- Every row contains the detour name, bilingual coming-soon text, and an arrow.
+- Each row links to one implemented site destination and may include a short subtitle.
 - Hover and keyboard focus add only a subtle pale-blue background and spacing change.
-- Rows are placeholders, not promises of a final content taxonomy.
+- These rows are actual navigation entrances, not placeholders.
 
 ### 7.4 Footer
 
@@ -133,7 +133,7 @@ The hash links are deliberate placeholders. When real destinations exist, replac
 | Secondary text | `#777777` | Supporting content |
 | Divider | `#e9e9e9` | Header and row rules |
 | Grid | `#dfe7ff` | Hero structure |
-| Hover fill | `#f5f7ff` | Detour interaction |
+| Hover fill | `#f5f7ff` | Home destination interaction |
 | Display font | Space Grotesk | Headlines and interface text |
 | Mono font | DM Mono | Wordmark, labels, footer |
 
@@ -146,16 +146,20 @@ Fonts are loaded from Google Fonts with system-font fallbacks. If external font 
 | File | Purpose |
 | --- | --- |
 | `index.html` | Page structure and content |
+| `personal.html` | Personal identity and sign-in entry |
+| `phd-application.html` | PHD APPLICATION workspace |
+| `maps/index.html`, `maps/maps.js` | MAPS page and interactions |
+| `blog.html`, `blog.css`, `blog.js` | Private BLOG page and interactions |
 | `style.css` | All layout, typography, colors, responsiveness, and hover styles |
+| `admin.js`, `supabase-config.js` | Shared sign-in and browser client configuration |
 | `PRD.md` | This product specification |
 | `AGENTS.md` | Instructions for future contributors and agents |
 
 ### Implementation choices
 
-- Plain HTML and CSS only.
-- No JavaScript.
-- No npm packages, framework, build process, or generated assets.
-- Native anchors provide navigation and scrolling.
+- Plain HTML, CSS, and JavaScript; no frontend framework or build process.
+- Supabase JS is loaded from a CDN for authentication and data access; MAPS also loads Globe.GL.
+- Native anchors provide page navigation and in-page scrolling.
 - GitHub Pages can serve the site directly.
 
 ## 10. Accessibility and quality requirements
@@ -171,32 +175,26 @@ Fonts are loaded from Google Fonts with system-font fallbacks. If external font 
 ## 11. Future decisions (require owner approval)
 
 - Replace `Construction zone / 建设中` with a final personal statement.
-- Decide the meaning and final names of the three detours.
-- Add or remove detours.
+- Decide whether to add any new site destination or major section.
 - Add an About section, photo, bio, work samples, email, or social channels.
 - Choose whether the site should become bilingual per section, per page, or via a language switcher.
-- Add motion only if it supports the content rather than merely decorates it.
-- Add individual detour pages only once they contain real material.
+- Require owner approval for new site-wide motion. Page-specific behavior remains governed by its product requirements.
 
 ## 12. Publishing checklist
 
-1. Copy `index.html`, `style.css`, `PRD.md`, and `AGENTS.md` into the root of `aaaaakach.github.io`.
+1. Publish the complete site from the repository root so all current pages, scripts, styles, data, and assets are included.
 2. Commit and push to the default branch configured for GitHub Pages.
 3. In GitHub repository settings, ensure Pages deploys from that branch and the repository root.
 4. Visit `https://aaaaakach.github.io/` after deployment and check the desktop and mobile layouts.
-5. Before replacing placeholders or adding features, ask the owner for approval.
+5. Obtain owner approval before publishing or changing repository settings.
 
 ## 13. Personal Space Expansion
 
 ### 13.1 Personal Space Direction
 
-The homepage is the entry point to `akach` as a personal space rather than a traditional portfolio or resume website.
-
-The three detours on the homepage are top-level entrances to future independent spaces. They are replaceable placeholders rather than a fixed information architecture.
+Home is the entry point to `akach` as a personal space rather than a traditional portfolio or resume website. Its three destination rows link to PHD APPLICATION, MAPS, and BLOG.
 
 ### 13.2 PHD APPLICATION
-
-`DETOUR 1` is replaced by `PHD APPLICATION`.
 
 Clicking `PHD APPLICATION` opens a separate next-level webpage dedicated to managing the user's PhD application process.
 
@@ -242,13 +240,13 @@ Markdown files such as `PRD.md` and `AGENTS.md` are planning and instruction doc
 
 ### 14.1 Approved destination
 
-One remaining Detour placeholder is assigned to **Maps**. Its homepage label becomes `Maps` and links to the independent `/maps/` subpage while retaining the same hierarchy, typography, hover/focus treatment, and responsive behavior as sibling entrances.
+The Home destination list and global navigation link to **Maps** at `/maps/`, retaining the site's shared hierarchy, typography, hover/focus treatment, and responsive behavior.
 
 ### 14.2 Scope boundary
 
 Maps is part of the same personal website, but its detailed product, interaction, data, motion, accessibility, security, and performance requirements live in [`MAPS_PRD.md`](MAPS_PRD.md). That document is authoritative for Maps-specific decisions; this `PRD.md` remains the website-level product specification.
 
-Maps is an approved exception to the v1 exclusions for an individual subpage, JavaScript/WebGL, motion, backend services, authentication, storage, and narrowly necessary dependencies. The exception applies only to Maps and shared administrator-session behavior explicitly described in `MAPS_PRD.md`; it does not silently expand the scope of Home or other detours.
+Maps has an approved scope for its JavaScript/WebGL, motion, Supabase data, authentication, storage, and narrowly necessary dependencies. Blog and shared administrator-session behavior are described in `BLOG_HANDOFF.md` and `MAPS_PRD.md`. These features do not authorize unrelated frameworks, dependencies, or build tooling.
 
 ### 14.3 Integration constraints
 

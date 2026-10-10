@@ -8,11 +8,15 @@
   const postForm = document.querySelector("#blog-post-form");
   const postStatus = document.querySelector("#blog-post-status");
   const postSubmit = document.querySelector("#blog-post-submit");
-  const entryPreview = document.querySelector("#blog-entry-preview");
   const loadStatus = document.querySelector("#blog-load-status");
   const timeline = document.querySelector("#blog-timeline");
   const archive = document.querySelector("#blog-archive");
   const archiveNav = document.querySelector("#blog-archive-nav");
+  const searchToggle = document.querySelector("#blog-search-toggle");
+  const searchPanel = document.querySelector("#blog-search-panel");
+  const searchInput = document.querySelector("#blog-search-input");
+  const searchStatus = document.querySelector("#blog-search-status");
+  const searchResults = document.querySelector("#blog-search-results");
   const exportToggle = document.querySelector("#blog-export-toggle");
   const exportPanel = document.querySelector("#blog-export-panel");
   const exportTree = document.querySelector("#blog-export-tree");
@@ -22,6 +26,7 @@
   const resizer = document.querySelector("#blog-resizer");
   let session = null;
   let isAdmin = false;
+  let isEditMode = false;
   let loadedUserId = null;
   let posts = [];
   let commentsByPost = new Map();
@@ -66,6 +71,9 @@
   };
   const dateLabel = (value, options = { year: "numeric", month: "long", day: "numeric" }) =>
     new Intl.DateTimeFormat("en", options).format(entryDate(value));
+  const postDateParts = value => new Intl.DateTimeFormat("en", {
+    month: "short", day: "numeric", year: "numeric"
+  }).formatToParts(entryDate(value));
   const commentTime = value => new Intl.DateTimeFormat("en", {
     timeZone: "Asia/Shanghai", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23"
   }).format(new Date(value));
@@ -75,18 +83,23 @@
     if (text !== undefined) node.textContent = text;
     return node;
   };
-  const updateEntryPreview = () => {
-    const now = captureLocalTime();
-    const zone = chinaTimeZones.has(now.timezone_name) ? "" : ` ${offsetLabel(now.timezone_offset_minutes)}`;
-    entryPreview.textContent = `${dateLabel(now.entry_date)} · ${now.entry_time.slice(0, 5)}${zone}`;
-  };
-
   const setAccess = signedIn => {
     access.hidden = signedIn;
     workspace.hidden = !signedIn;
-    exportToggle.hidden = !signedIn;
+    searchToggle.hidden = !signedIn;
+    const canExport = signedIn && isAdmin && isEditMode;
+    exportToggle.hidden = !canExport;
+    if (!canExport) {
+      exportPanel.hidden = true;
+      exportToggle.setAttribute("aria-expanded", "false");
+    }
     if (!signedIn) {
       editor.hidden = true;
+      searchPanel.hidden = true;
+      searchToggle.setAttribute("aria-expanded", "false");
+      searchInput.value = "";
+      searchStatus.textContent = "Enter a word or phrase.";
+      searchResults.replaceChildren();
       exportPanel.hidden = true;
       exportToggle.setAttribute("aria-expanded", "false");
       timeline.replaceChildren();
@@ -143,6 +156,50 @@
     }
   };
 
+  const renderSearchResults = () => {
+    searchResults.replaceChildren();
+    const query = searchInput.value.trim().toLocaleLowerCase();
+    if (!query) {
+      searchStatus.textContent = "Enter a word or phrase.";
+      return;
+    }
+    let resultCount = 0;
+    let postCount = 0;
+    for (const post of posts) {
+      const sentences = (post.body.match(/[^。！？.!?\r\n]+[。！？.!?]?/g) || [])
+        .map(sentence => sentence.trim())
+        .filter(sentence => sentence.toLocaleLowerCase().includes(query));
+      const matches = sentences.length ? sentences : post.title.toLocaleLowerCase().includes(query) ? [post.title] : [];
+      if (!matches.length) continue;
+      postCount++;
+      for (const sentence of matches) {
+        const result = element("li");
+        const link = element("a");
+        link.href = `#post-${post.id}`;
+        const excerpt = element("span", "blog-search-result-sentence");
+        let cursor = 0;
+        let matchStart;
+        const lowerSentence = sentence.toLocaleLowerCase();
+        while ((matchStart = lowerSentence.indexOf(query, cursor)) !== -1) {
+          excerpt.append(document.createTextNode(sentence.slice(cursor, matchStart)));
+          excerpt.append(element("mark", "blog-search-highlight", sentence.slice(matchStart, matchStart + query.length)));
+          cursor = matchStart + query.length;
+        }
+        excerpt.append(document.createTextNode(sentence.slice(cursor)));
+        link.append(excerpt);
+        const date = element("time", "", dateLabel(post.entry_date));
+        date.dateTime = post.entry_date;
+        link.append(date);
+        result.append(link);
+        searchResults.append(result);
+        resultCount++;
+      }
+    }
+    searchStatus.textContent = resultCount
+      ? `${resultCount} matching sentence${resultCount === 1 ? "" : "s"} in ${postCount} post${postCount === 1 ? "" : "s"}.`
+      : "No matching posts.";
+  };
+
   const renderComments = (post, card) => {
     const section = element("section", "blog-comments");
     section.setAttribute("aria-label", "Comments");
@@ -168,12 +225,16 @@
     for (const comment of comments) {
       const row = element("li", "blog-comment");
       const content = element("div");
-      content.append(element("p", "blog-comment-body", comment.body));
+      const meta = element("div", "blog-comment-meta");
+      const ownComment = isAdmin && comment.created_by === session?.user?.id;
+      meta.append(element("strong", "blog-comment-author", ownComment ? "yu" : comment.author_name || "Member"));
       const time = element("time", "", commentTime(comment.created_at));
       time.dateTime = comment.created_at;
-      content.append(time);
+      meta.append(time);
+      content.append(meta);
+      content.append(element("p", "blog-comment-body", comment.body));
       row.append(content);
-      if (isAdmin) {
+      if (isAdmin && isEditMode) {
         const remove = element("button", "blog-comment-delete", "Delete");
         remove.type = "button";
         remove.dataset.deleteComment = comment.id;
@@ -206,7 +267,7 @@
   const renderTimeline = () => {
     timeline.replaceChildren();
     if (!posts.length) {
-      timeline.append(element("p", "blog-empty", isAdmin ? "Your first post will appear here." : "There are no posts yet."));
+      timeline.append(element("p", "blog-empty", isAdmin && session ? "Your first post will appear here." : "There are no posts yet."));
       return;
     }
     const groups = new Map();
@@ -219,12 +280,20 @@
       day.id = `date-${date}`;
       day.setAttribute("aria-labelledby", `heading-${date}`);
       const heading = element("header", "blog-day-heading");
-      const headingText = element("h2", "", dateLabel(date));
+      const headingText = element("h2");
       headingText.id = `heading-${date}`;
+      const parts = postDateParts(date);
+      headingText.append(element("span", "blog-total-date-month", parts.find(part => part.type === "month")?.value));
+      headingText.append(document.createTextNode(" "));
+      headingText.append(element("span", "blog-total-date-day", parts.find(part => part.type === "day")?.value));
+      headingText.append(document.createTextNode(", "));
+      headingText.append(element("span", "blog-total-date-year", parts.find(part => part.type === "year")?.value));
       heading.append(headingText, element("span", "blog-day-count", String(dayPosts.length)));
       day.append(heading);
       for (const post of dayPosts) {
         const card = element("article", "blog-entry");
+        card.id = `post-${post.id}`;
+        card.tabIndex = -1;
         const cardHeader = element("header", "blog-entry-header");
         const titleBlock = element("div");
         titleBlock.append(element("h3", "blog-entry-title", post.title));
@@ -233,7 +302,7 @@
         time.dateTime = post.entry_time ? `${post.entry_date}T${String(post.entry_time).slice(0, 8)}` : post.entry_date;
         titleBlock.append(time);
         cardHeader.append(titleBlock);
-        if (isAdmin) {
+        if (isAdmin && isEditMode) {
           const actions = element("div", "blog-card-actions");
           const remove = element("button", "", "Delete");
           remove.type = "button";
@@ -336,7 +405,7 @@
       const dateTime = [post.entry_date, localTimeLabel(post)].filter(Boolean).join(" ");
       const comments = commentsByPost.get(post.id) || [];
       const commentText = comments.length
-        ? `\n\n### Comments (${comments.length})\n\n${comments.map(comment => `- ${comment.body.replace(/\n/g, "\n  ")} _(${new Date(comment.created_at).toISOString()})_`).join("\n")}`
+        ? `\n\n### Comments (${comments.length})\n\n${comments.map(comment => `- **${comment.author_name || "Member"}:** ${comment.body.replace(/\n/g, "\n  ")} _(${new Date(comment.created_at).toISOString()})_`).join("\n")}`
         : "\n\n### Comments (0)";
       return `## ${post.title}\n\n**${dateTime}**\n\n${post.body}${commentText}`;
     }).join("\n\n---\n\n");
@@ -344,7 +413,11 @@
     const url = URL.createObjectURL(blob);
     const link = element("a");
     link.href = url;
-    link.download = "blog-export.md";
+    const monthStamp = [...new Set(selected.map(post => post.entry_date.slice(0, 7).replace("-", "")))].sort().join("-");
+    const now = new Date();
+    const pad = value => String(value).padStart(2, "0");
+    const timeStamp = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
+    link.download = `website_blog_${monthStamp}_${timeStamp}.md`;
     document.body.append(link);
     link.click();
     link.remove();
@@ -361,7 +434,7 @@
     commentsByPost = new Map();
     if (posts.length) {
       const { data: commentRows, error: commentError } = await client.from("blog_comments")
-        .select("id,post_id,body,created_at,created_by").in("post_id", posts.map(post => post.id)).order("created_at", { ascending: true });
+        .select("id,post_id,body,author_name,created_at,created_by").in("post_id", posts.map(post => post.id)).order("created_at", { ascending: true });
       if (commentError) throw commentError;
       for (const comment of commentRows || []) {
         if (!commentsByPost.has(comment.post_id)) commentsByPost.set(comment.post_id, []);
@@ -370,6 +443,7 @@
     }
     renderArchive();
     renderTimeline();
+    renderSearchResults();
     renderExportTree();
     loadStatus.textContent = "";
   };
@@ -382,7 +456,7 @@
     }
   };
 
-  const updateAdminView = () => { editor.hidden = !isAdmin; renderTimeline(); };
+  const updateAdminView = () => { editor.hidden = !(isAdmin && session); renderTimeline(); };
 
   const resizeSidebar = clientX => {
     const bounds = layout.getBoundingClientRect();
@@ -419,20 +493,27 @@
     postSubmit.disabled = false;
     if (error) { postStatus.textContent = error.message; return; }
     postForm.reset();
-    updateEntryPreview();
     postStatus.textContent = "Published.";
     await refreshBlog();
   });
 
   postForm.addEventListener("reset", () => {
     postStatus.textContent = "";
-    setTimeout(updateEntryPreview, 0);
   });
 
   exportToggle.addEventListener("click", () => {
     exportPanel.hidden = !exportPanel.hidden;
     exportToggle.setAttribute("aria-expanded", String(!exportPanel.hidden));
   });
+  searchToggle.addEventListener("click", () => {
+    searchPanel.hidden = !searchPanel.hidden;
+    searchToggle.setAttribute("aria-expanded", String(!searchPanel.hidden));
+    if (!searchPanel.hidden) {
+      renderSearchResults();
+      searchInput.focus();
+    }
+  });
+  searchInput.addEventListener("input", renderSearchResults);
   exportTree.addEventListener("change", event => {
     const input = event.target;
     if (input.matches("[data-export-date]")) {
@@ -500,12 +581,12 @@
       return;
     }
     const deletePost = event.target.closest("[data-delete-post]");
-    if (deletePost && isAdmin && window.confirm("Delete this post and its comments?")) {
+    if (deletePost && isAdmin && isEditMode && window.confirm("Delete this post and its comments?")) {
       const { error } = await client.from("blog_posts").delete().eq("id", deletePost.dataset.deletePost);
       if (error) loadStatus.textContent = error.message; else await refreshBlog();
     }
     const deleteComment = event.target.closest("[data-delete-comment]");
-    if (deleteComment && isAdmin && window.confirm("Delete this comment?")) {
+    if (deleteComment && isAdmin && isEditMode && window.confirm("Delete this comment?")) {
       const { error } = await client.from("blog_comments").delete().eq("id", deleteComment.dataset.deleteComment);
       if (error) loadStatus.textContent = error.message; else await refreshBlog();
     }
@@ -522,7 +603,9 @@
     if (!body) { output.textContent = "Write a comment before submitting."; return; }
     button.disabled = true;
     const postId = form.dataset.commentPost;
-    const { error } = await client.from("blog_comments").insert({ post_id: postId, body });
+    const metadata = session.user.user_metadata || {};
+    const authorName = isAdmin ? "yu" : String(metadata.full_name || metadata.name || session.user.email?.split("@")[0] || "Member").trim().slice(0, 80) || "Member";
+    const { error } = await client.from("blog_comments").insert({ post_id: postId, body, author_name: authorName });
     button.disabled = false;
     if (error) { output.textContent = error.message; return; }
     expandedComments.add(postId);
@@ -535,10 +618,11 @@
     window.addEventListener("adminchange", event => {
       session = event.detail.session;
       isAdmin = event.detail.authorized;
+      isEditMode = event.detail.editMode;
       const userId = session?.user?.id || null;
       setAccess(!!userId);
       if (!userId) return;
-      editor.hidden = !isAdmin;
+      editor.hidden = !(isAdmin && session);
       if (userId !== loadedUserId) { loadedUserId = userId; refreshBlog(); }
       else updateAdminView();
     });
@@ -546,11 +630,11 @@
     if (current.session) {
       session = current.session;
       isAdmin = current.authorized;
+      isEditMode = current.editMode;
       setAccess(true);
-      editor.hidden = !isAdmin;
+      editor.hidden = !(isAdmin && session);
       loadedUserId = session.user.id;
       refreshBlog();
     }
   }
-  updateEntryPreview();
 })();

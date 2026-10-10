@@ -6,6 +6,7 @@
   let session = null;
   let authorized = false;
   let editMode = false;
+  let verification = 0;
 
   const modal = document.createElement("dialog");
   modal.className = "identity-dialog";
@@ -22,7 +23,8 @@
     const adminGreeting = email === "yucai2027@gmail.com" || email === "akach66666@gmail.com";
     greeting.textContent = session ? `Hi, ${adminGreeting ? "yu" : email.split("@")[0]}!` : "I'm";
     document.querySelectorAll(".wordmark").forEach(mark => {
-      mark.textContent = authorized ? "me" : "akach";
+      mark.textContent = authorized ? "m e" : "akach";
+      mark.classList.toggle("is-authorized", authorized);
       mark.setAttribute("aria-label", `${authorized ? "me" : "akach"} personal page`);
     });
     document.body.classList.toggle("is-admin", authorized);
@@ -36,11 +38,18 @@
   };
 
   const verify = async nextSession => {
+    const currentVerification = ++verification;
     session = nextSession;
-    authorized = false;
+    const cachedAdmin = session?.user?.id === sessionStorage.getItem("akach-admin-user");
+    authorized = cachedAdmin;
+    editMode = cachedAdmin && sessionStorage.getItem("akach-edit-mode") === "1";
+    publish();
     if (session && client) {
       const { data, error } = await client.rpc("is_map_admin");
+      if (currentVerification !== verification) return;
       authorized = !error && data === true;
+      if (authorized) sessionStorage.setItem("akach-admin-user", session.user.id);
+      else sessionStorage.removeItem("akach-admin-user");
       if (!authorized) output.textContent = "This account has visitor access only.";
     }
     editMode = authorized && sessionStorage.getItem("akach-edit-mode") === "1";

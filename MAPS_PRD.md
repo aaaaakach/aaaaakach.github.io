@@ -10,8 +10,8 @@ Reference: https://github.com/binzek/pinglobe, for the broad globe-led concept o
 
 ## 2. Site integration
 
-- Replace one unassigned Home Detour with Maps.
-- Keep the entrance visually and behaviorally consistent with sibling entrances.
+- Link Maps from Home's current destination list and the shared global navigation.
+- Keep the Home link visually consistent with the PHD APPLICATION and BLOG destinations.
 - Open an independent /maps/ page.
 - Inherit the global header, lowercase akach wordmark, typography, base colors, transition language, responsive behavior, and accessibility baseline.
 - Load Maps-only code, geographic data, WebGL, and media after entering /maps/. Home performance must not be materially affected.
@@ -50,7 +50,7 @@ Keywords: Minimal / Light / Blue / Personal / Playful / Editorial.
 - Avoid heavy shadows, large gradients, strong glow, or visual noise.
 - Existing site tokens take precedence.
 
-Temporary development colors:
+Current Maps colors:
 
 | Role | Placeholder |
 | --- | --- |
@@ -275,19 +275,20 @@ Motion is soft, natural, deliberate, and spatial:
 
 Avoid ubiquitous bounce/spring, flashing, glow, particle explosions, and overly fast transitions.
 
-## 16. Development placeholders
+## 16. Current assets and data fallback
 
-- Plane: ✈︎.
-- Pin: 📍.
-- Photos: neutral placeholders.
-- Data: a small mock set of countries, provinces, and Pins.
-- Administrator accounts and Supabase values: environment/configuration placeholders; never committed secrets.
+- Plane: `maps/airplane.svg` is the current asset.
+- Pin: 📍 remains the current simple marker.
+- Photos: neutral placeholders are used when no photo is stored.
+- Local fallback data: `maps/maps.js` contains country, province, and city records used when Supabase is unavailable; verify them against the database before changing or removing them.
+- China data: `maps/data/china-city-data.js` and `maps/data/china-provinces-full.geojson` are currently loaded. `china-cities.json` and `china-provinces.json` are retained as reference data for possible future China-view use.
+- Supabase browser settings live in `supabase-config.js`; never commit service-role keys or other secrets.
 
-Missing final assets must not block structural development, but placeholders must be replaceable.
+Replaceable visual placeholders may be updated when the owner approves a final asset.
 
 ## 17. Delivery phases
 
-1. Website integration: Detour → Maps, /maps/, inherited navigation and base layout.
+1. Website integration: Home destination list → Maps, /maps/, inherited navigation and base layout.
 2. Globe: polygons, borders, visited states, drag/touch, rotation, hover/focus.
 3. Memory UI: leader lines, photos, notes, positioning, preview/selection/dismiss/switch states.
 4. China: entry transition, complete province map, province states/cards, return.
@@ -299,7 +300,7 @@ Missing final assets must not block structural development, but placeholders mus
 
 ## 18. Acceptance criteria
 
-1. Home assigns an approved Detour to Maps and links to /maps/.
+1. Home links to Maps at /maps/ from its destination list and shared navigation.
 2. Maps preserves the site's identity and loads heavy resources only on its route.
 3. A centered draggable/touch-draggable globe shows borders and distinct visited/unvisited countries.
 4. Hover/focus previews a visited Country/Province Card; click/tap keeps it open.
