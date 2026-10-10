@@ -396,6 +396,10 @@
 
   document.querySelector("#blog-login").addEventListener("click", async () => {
     if (!client) { accessStatus.textContent = "Google sign-in is not available right now."; return; }
+    if (window.location.protocol === "file:") {
+      accessStatus.textContent = "Open this page through a local web server to sign in.";
+      return;
+    }
     accessStatus.textContent = "";
     const redirectTo = new URL(window.location.pathname, window.location.origin).href;
     const { error } = await client.auth.signInWithOAuth({ provider: "google", options: { redirectTo } });

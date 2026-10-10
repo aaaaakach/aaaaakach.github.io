@@ -70,9 +70,14 @@
   });
   modal.querySelector("[data-login]").addEventListener("click", async () => {
     if (!client) return open();
+    if (window.location.protocol === "file:") {
+      output.textContent = "Open this page through a local web server to sign in.";
+      return;
+    }
+    const redirectTo = new URL(window.location.pathname, window.location.origin).href;
     const { error } = await client.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/` }
+      options: { redirectTo }
     });
     if (error) output.textContent = error.message;
   });
