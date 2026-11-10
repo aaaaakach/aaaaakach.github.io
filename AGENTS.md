@@ -2,7 +2,7 @@
 
 ## Project
 
-This is akach's multi-page personal website, hosted on GitHub Pages at `aaaaakach.github.io`.
+This is vegfish's multi-page personal website, hosted on GitHub Pages at [`https://vegfish.top/`](https://vegfish.top/). The legacy GitHub Pages address is `https://aaaaakach.github.io/`.
 
 The site uses plain HTML, CSS, and JavaScript without a frontend framework or build step:
 
@@ -17,6 +17,8 @@ The site uses plain HTML, CSS, and JavaScript without a frontend framework or bu
 
 Read `MAPS_PRD.md` before Maps work and `BLOG_HANDOFF.md` before Blog work. Maps and Blog use JavaScript and Supabase for their approved features. Maps also uses WebGL and geographic data. These scoped features do not authorize unrelated frameworks, packages, or build tooling.
 
+Read `HANDOFF.md` for the current deployment, domain, authentication, and local-preview status before continuing cross-site work.
+
 ## Owner approval rule
 
 Before changing any page content, design direction, navigation, dependency, asset, publishing configuration, or repository state, describe the proposed change and ask the owner for approval.
@@ -25,7 +27,7 @@ Read-only inspection, explaining options, and drafting a proposal are allowed wi
 
 ## Current design contract
 
-- The wordmark is always lowercase: `akach`.
+- The wordmark is always lowercase: `vegfish`.
 - Header layout: wordmark at upper-left; centered `HOME / PHD APPLICATION / MAPS / BLOG` navigation on desktop.
 - The main message is bilingual: `Construction zone / 建设中`.
 - Keep the visual language sparse: near-white canvas, black/grey text, very subtle blue-grey grid, thin dividers, large type, and ample whitespace.
@@ -66,4 +68,4 @@ For approved Maps changes, also verify desktop/touch behavior, keyboard access, 
 
 ## Publishing
 
-GitHub Pages should serve `index.html` from the repository root. Do not push, deploy, modify repository settings, or upload files without explicit owner approval.
+GitHub Pages serves `index.html` from the repository root. The primary domain is `vegfish.top`, and HTTPS enforcement is enabled. Do not push, deploy, modify repository settings, or upload files without explicit owner approval.

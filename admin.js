@@ -23,9 +23,9 @@
     const adminGreeting = email === "yucai2027@gmail.com" || email === "akach66666@gmail.com";
     greeting.textContent = session ? `Hi, ${adminGreeting ? "yu" : email.split("@")[0]}!` : "I'm";
     document.querySelectorAll(".wordmark").forEach(mark => {
-      mark.textContent = authorized ? "m e" : "akach";
+      mark.textContent = authorized ? "m e" : "vegfish";
       mark.classList.toggle("is-authorized", authorized);
-      mark.setAttribute("aria-label", `${authorized ? "me" : "akach"} personal page`);
+      mark.setAttribute("aria-label", `${authorized ? "me" : "vegfish"} personal page`);
     });
     document.body.classList.toggle("is-admin", authorized);
     document.body.classList.toggle("is-edit-mode", authorized && editMode);
@@ -61,6 +61,12 @@
     output.textContent = client ? "" : "Add your Supabase URL and anon key to enable sign-in.";
     if (!modal.open) modal.showModal();
   };
+  modal.addEventListener("click", event => {
+    if (event.target !== modal) return;
+    const bounds = modal.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right
+      || event.clientY < bounds.top || event.clientY > bounds.bottom) modal.close();
+  });
   document.querySelectorAll(".wordmark").forEach(mark => {
     mark.href = document.body.classList.contains("maps-page") ? "../personal.html" : "personal.html";
     mark.addEventListener("contextmenu", open);

@@ -2,7 +2,7 @@
 
 ## 1. Product purpose
 
-Maps is an independent second-level page within the akach personal website. It uses an interactive 3D globe to hold visited countries, visited Chinese provinces, meaningful coordinates, photographs, and short personal memories.
+Maps is an independent second-level page within the vegfish personal website. It uses an interactive 3D globe to hold visited countries, visited Chinese provinces, meaningful coordinates, photographs, and short personal memories.
 
 Maps should feel like a quiet personal travel memory, not a GIS product, check-in tool, game UI, or data dashboard.
 
@@ -13,7 +13,7 @@ Reference: https://github.com/binzek/pinglobe, for the broad globe-led concept o
 - Link Maps from Home's current destination list and the shared global navigation.
 - Keep the Home link visually consistent with the PHD APPLICATION and BLOG destinations.
 - Open an independent /maps/ page.
-- Inherit the global header, lowercase akach wordmark, typography, base colors, transition language, responsive behavior, and accessibility baseline.
+- Inherit the global header, lowercase vegfish wordmark, typography, base colors, transition language, responsive behavior, and accessibility baseline.
 - Load Maps-only code, geographic data, WebGL, and media after entering /maps/. Home performance must not be materially affected.
 - PRD.md remains the site-level PRD. This document is authoritative for Maps-specific behavior.
 
@@ -194,7 +194,7 @@ In Edit Mode only, show a small Pin entry beside Places. It requests required La
 
 ## 10. Data and photos
 
-Deployment remains GitHub Pages. Persistent data uses Supabase Database; photos use Supabase Storage. Do not hard-code user-created travel data into the repository.
+Deployment remains GitHub Pages at [`https://vegfish.top/maps/`](https://vegfish.top/maps/). Persistent data uses Supabase Database; photos use Supabase Storage. Do not hard-code user-created travel data into the repository. See `HANDOFF.md` for current DNS, HTTPS, and login setup status.
 
 Logical Region fields:
 
@@ -213,9 +213,9 @@ The schema may normalize photos, but the visible behavior remains three represen
 
 ## 11. Authentication and shared identity
 
-Authentication begins from the main site's upper-left akach, not from a separate Maps admin page.
+Authentication begins from the main site's upper-left vegfish, not from a separate Maps admin page.
 
-1. Click/tap akach.
+1. Click/tap vegfish.
 2. Blur and slightly desaturate/dim the current page.
 3. Show centered “I'm” with a subtle typewriter effect.
 4. Continue to Google OAuth through Supabase Auth.
@@ -226,7 +226,7 @@ Typing “蔡予” is not a password and must not grant permission through clie
 - Enforce rights with Supabase Auth, database RLS, and Storage policies.
 - Never expose service-role keys or trust a client-only allowlist.
 - Share the valid session across Home and Maps and retain it across refresh for its normal lifetime.
-- After authorized login, transition the global label from akach to me using a subtle 300–500 ms crossfade/morph.
+- After authorized login, transition the global label from vegfish to me using a subtle 300–500 ms crossfade/morph.
 - Do not show “Admin”, “Administrator”, “Management”, or similar labels.
 - Clicking me may reopen identity/session controls, including Exit Edit Mode.
 
@@ -295,7 +295,7 @@ Replaceable visual placeholders may be updated when the owner approves a final a
 5. Paper Plane: scene placement, input validation, flight, ripple, light-up.
 6. Pins: coordinate entry, drop motion, labels, independent model.
 7. Supabase: Regions, Pins, Storage, loading/error states, persistence.
-8. Administrator: OAuth, allowlist/RLS/Storage policies, shared session, akach → me, edit controls.
+8. Administrator: OAuth, allowlist/RLS/Storage policies, shared session, vegfish → me, edit controls.
 9. Polish: timing, responsive behavior, accessibility, reduced motion, fallback, performance, final assets/data.
 
 ## 18. Acceptance criteria
@@ -315,7 +315,7 @@ Replaceable visual placeholders may be updated when the owner approves a final a
 13. Visitors can view Pins and non-empty Pin notes; empty notes create no empty label.
 14. Supabase persists Regions/Pins and Storage holds photos.
 15. Google OAuth plus allowlist, RLS, and Storage policies prevent visitor writes.
-16. Authorized login is shared site-wide and changes akach to me.
+16. Authorized login is shared site-wide and changes vegfish to me.
 17. Edit Mode edits Region content and edits/deletes Pins without a separate backend page.
 18. Failure states never misrepresent unsaved data as persisted.
 19. Keyboard, touch, reduced-motion, mobile, and WebGL-unavailable behavior remain usable.

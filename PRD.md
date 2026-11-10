@@ -1,12 +1,14 @@
-# akach Personal Website — PRD
+# vegfish Personal Website — PRD
 
 ## 1. Overview
 
 | Item | Current decision |
 | --- | --- |
-| Site name | `akach` (always lowercase) |
-| Public address | `aaaaakach.github.io` |
-| Planned custom domain | `vegfish.top` (configuration and publishing are still pending) |
+| Site name | `vegfish` (always lowercase) |
+| Primary public address | `https://vegfish.top/` |
+| Legacy GitHub Pages address | `https://aaaaakach.github.io/` |
+| Hosting | GitHub Pages, served from the repository root |
+| Domain status | Custom domain configured; HTTPS enforced |
 | Product type | Static multi-page personal website |
 | Current status | Home, PHD APPLICATION, MAPS, and private BLOG are implemented |
 | Primary language | English + Simplified Chinese |
@@ -15,11 +17,11 @@
 
 ## 2. Product goal
 
-Create a calm, memorable personal website that introduces `akach` and connects visitors to the owner's current workspaces: PHD APPLICATION, MAPS, and BLOG. Home provides the shared identity, navigation, and visual language for these destinations.
+Create a calm, memorable personal website that introduces `vegfish` and connects visitors to the owner's current workspaces: PHD APPLICATION, MAPS, and BLOG. Home provides the shared identity, navigation, and visual language for these destinations.
 
 ### Current success criteria
 
-- The name `akach` is immediately visible in the upper-left corner.
+- The name `vegfish` is immediately visible in the upper-left corner.
 - A visitor can understand that the site is under construction in both languages.
 - Every page exposes the same four global navigation destinations: Home, PHD APPLICATION, MAPS, and BLOG.
 - Home links to the three implemented destinations below its hero.
@@ -50,7 +52,7 @@ Changes to product scope, external services, or dependencies require owner appro
 
 The initial audience is people who arrive through the personal URL. They should leave with three impressions:
 
-1. This is akach's personal space.
+1. This is vegfish's personal space.
 2. The site is actively being made.
 3. More distinct work or directions will appear here later.
 
@@ -71,22 +73,22 @@ The global navigation links to Home and these same three current destinations. T
 
 | Area | English | 中文 | Status |
 | --- | --- | --- | --- |
-| Wordmark | `akach` | — | Final for v1 |
-| Browser title | `akach — Construction zone` | — | Provisional |
-| Hero headline | `akach` | — | Final for v1 |
+| Wordmark | `vegfish` | — | Current |
+| Browser titles | `Home`, `Personal`, `PhD Application`, `Maps`, `Blog` | — | Current |
+| Hero headline | `vegfish` | — | Current |
 | Hero message | `Construction zone` | `建设中` | Provisional |
 | Status label | `WORK IN PROGRESS` | — | Provisional |
 | Scroll cue | `explore below` | — | Provisional |
 | Navigation | `HOME`, `PHD APPLICATION`, `MAPS`, `BLOG` | — | Current |
 | Home destination links | PHD APPLICATION, MAPS, BLOG | — | Current |
-| Footer | `© 2026 akach` | `More coming soon. / 更多内容即将到来。` | Current; retain |
+| Footer | `© 2026 vegfish` | `More coming soon. / 更多内容即将到来。` | Current; retain |
 
 ## 7. Page specification
 
 ### 7.1 Header
 
 - Sits at the top of the page, separated from the content by a thin line.
-- The left-most item is the `akach` wordmark and links to Home.
+- The left-most item is the `vegfish` wordmark and links to Home.
 - Navigation is centered on wide screens.
 - The active Home item has a dark underline.
 - On narrow screens, the header becomes two rows: wordmark first, horizontally scrollable navigation second.
@@ -96,7 +98,7 @@ The global navigation links to Home and these same three current destinations. T
 - Fills at least the remaining viewport height after the header on desktop.
 - Uses a near-white background overlaid with a very light blue-grey square grid.
 - Contains a small `WORK IN PROGRESS` status at the upper-left.
-- Places a very large `akach` headline at the visual center.
+- Places a very large `vegfish` headline at the visual center.
 - Places `Construction zone / 建设中` at the right side of the headline area.
 - Ends with a text-only downward exploration cue.
 - Contains no animation and no decorative image assets.
@@ -185,14 +187,14 @@ Fonts are loaded from Google Fonts with system-font fallbacks. If external font 
 1. Publish the complete site from the repository root so all current pages, scripts, styles, data, and assets are included.
 2. Commit and push to the default branch configured for GitHub Pages.
 3. In GitHub repository settings, ensure Pages deploys from that branch and the repository root.
-4. Visit `https://aaaaakach.github.io/` after deployment and check the desktop and mobile layouts.
+4. Visit `https://vegfish.top/` after deployment and check the desktop and mobile layouts. The legacy `https://aaaaakach.github.io/` address may remain available.
 5. Obtain owner approval before publishing or changing repository settings.
 
 ## 13. Personal Space Expansion
 
 ### 13.1 Personal Space Direction
 
-Home is the entry point to `akach` as a personal space rather than a traditional portfolio or resume website. Its three destination rows link to PHD APPLICATION, MAPS, and BLOG.
+Home is the entry point to `vegfish` as a personal space rather than a traditional portfolio or resume website. Its three destination rows link to PHD APPLICATION, MAPS, and BLOG.
 
 ### 13.2 PHD APPLICATION
 
@@ -252,5 +254,5 @@ Maps has an approved scope for its JavaScript/WebGL, motion, Supabase data, auth
 
 - Preserve the existing global wordmark, navigation language, visual tokens, accessibility baseline, and responsive behavior.
 - Load Maps-only code, geographic data, WebGL, and media after entering `/maps/`; Home must remain lightweight.
-- Administrator authentication begins from the site-level `akach` identity entry and is shared with Maps. Successful authorized login changes the global label from `akach` to `me` as specified in `MAPS_PRD.md`.
+- Administrator authentication begins from the site-level `vegfish` identity entry and is shared with Maps. Successful authorized login changes the global label from `vegfish` to `me` as specified in `MAPS_PRD.md`.
 - Do not use either Markdown document as runtime content or configuration.

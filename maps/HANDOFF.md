@@ -1,10 +1,10 @@
-# HANDOFF.md — akach Maps Project
+# HANDOFF.md — vegfish Maps Project
 
 更新：2026-10-10
 
 ## 0. 这是什么
 
-这是个人 GitHub Pages 网站 `aaaaakach.github.io` 的 Maps 二级页面：
+这是个人 GitHub Pages 网站的 Maps 二级页面，当前主域名为 `vegfish.top`，旧的 GitHub Pages 地址为 `aaaaakach.github.io`：
 
 `/maps/`
 
@@ -57,7 +57,7 @@ Maps 页面：
 
 ## Ponytail
 用途：
-- 保持现有 `akach` 网站的视觉语言
+- 保持现有 `vegfish` 网站的视觉语言
 - 前端布局、比例、间距、排版、视觉一致性
 - 不负责产品需求决策
 
@@ -560,9 +560,9 @@ Country / Province Memory Card：
 入口在主网站左上角：
 
 普通：
-`akach`
+`vegfish`
 
-点击 `akach`：
+点击 `vegfish`：
 - 页面背景 blur
 - 轻微降亮度 / 饱和度
 - 中央出现：
@@ -576,7 +576,7 @@ Country / Province Memory Card：
 管理员登录成功后：
 
 全站：
-`akach → me`
+`vegfish → me`
 
 使用：
 - subtle crossfade / morph
@@ -784,7 +784,7 @@ Phase 1–8 的主要功能代码已存在于当前 checkout。阶段规划保�
 - only 2 authorized emails
 - RLS prevents normal visitors from writes
 - Storage upload/delete permissions correct
-- `akach → me`
+- `vegfish → me`
 - session persistence
 
 ## Performance

@@ -33,10 +33,8 @@ const updatePlaces = () => {
   document.querySelector("#city-count").textContent = travelData.cities.length;
   document.querySelector("#places-country-count").textContent = currentCountries.length;
   document.querySelector("#places-city-count").textContent = travelData.cities.length;
+  console.assert(Number(document.querySelector("#country-count").textContent) === currentCountries.length);
 };
-
-updatePlaces();
-console.assert(Number(document.querySelector("#country-count").textContent) === visitedCountries.length);
 
 const shell = document.querySelector(".maps-shell");
 const stage = document.querySelector("#globe");
@@ -106,6 +104,8 @@ let memoryEditing = false;
 
 if (!window.Globe) {
   status.textContent = "The globe could not be loaded.";
+  updatePlaces();
+  dataStatus.textContent = "Showing local fallback travel memories.";
 } else {
   let viewMode = "world";
   let hoveredCountry = null;
@@ -845,18 +845,31 @@ if (!window.Globe) {
   };
 
   const loadPersistentData = async () => {
-    if (!supabaseConfig.url || !supabaseConfig.anonKey || !window.supabase?.createClient) return;
-    database = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
     dataStatus.textContent = "Loading travel memories…";
-    const [regionsResult, citiesResult, pinsResult] = await Promise.all([
-      database.from("map_regions").select("id,type,name,code,parent_country,visited,note,photos,created_at,updated_at"),
-      database.from("map_cities").select("id,city_code,city_name,country_code,country_name,province_code,province_name,latitude,longitude,created_at,updated_at"),
-      database.from("map_pins").select("id,latitude,longitude,note,created_at,updated_at"),
-    ]);
+    if (!supabaseConfig.url || !supabaseConfig.anonKey || !window.supabase?.createClient) {
+      updatePlaces();
+      dataStatus.textContent = "Showing local fallback travel memories.";
+      return;
+    }
+    let regionsResult, citiesResult, pinsResult;
+    try {
+      database = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
+      [regionsResult, citiesResult, pinsResult] = await Promise.all([
+        database.from("map_regions").select("id,type,name,code,parent_country,visited,note,photos,created_at,updated_at"),
+        database.from("map_cities").select("id,city_code,city_name,country_code,country_name,province_code,province_name,latitude,longitude,created_at,updated_at"),
+        database.from("map_pins").select("id,latitude,longitude,note,created_at,updated_at"),
+      ]);
+    } catch {
+      database = null;
+      updatePlaces();
+      dataStatus.textContent = "Showing local fallback travel memories; remote data is unavailable.";
+      return;
+    }
     const error = regionsResult.error || citiesResult.error || pinsResult.error;
     if (error) {
       database = null;
-      reportPersistenceError("Travel memories are temporarily using local fallback data.");
+      updatePlaces();
+      dataStatus.textContent = "Showing local fallback travel memories; remote data is unavailable.";
       return;
     }
 
@@ -1019,6 +1032,9 @@ if (!window.Globe) {
     renderExistingPhotoControls(record);
     memoryForm.hidden = false;
     memoryName.focus({ preventScroll: true });
+    requestAnimationFrame(() => card.dataset.regionType === "country"
+      ? positionCountryMemory(selectedCountry || hoveredCountry)
+      : positionProvinceMemory(selectedProvince || hoveredProvince));
   };
   const deleteMemoryPhoto = async reference => {
     if (!requireEdit()) return;
@@ -1436,8 +1452,8 @@ if (!window.Globe) {
     globe.pointOfView(view, reducedMotion ? 0 : 180);
   });
 
-  // Natural Earth Admin 0 data (public domain), redistributed by the Globe.GL example dataset.
-  fetch("https://raw.githubusercontent.com/vasturiano/globe.gl/master/example/datasets/ne_110m_admin_0_countries.geojson")
+  // Natural Earth Admin 0 data, stored locally to avoid a runtime GitHub request.
+  fetch("data/world-countries.geojson")
     .then(response => {
       if (!response.ok) throw new Error("Country data request failed");
       return response.json();
